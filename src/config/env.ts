@@ -1,21 +1,31 @@
 import "dotenv/config";
+import { z } from "zod";
 
-function getEnvVariable(
-  key: string,
-  defaultValue?: string | number
-): string | number {
-  const value = process.env[key];
-  if (value === undefined || value === "") {
-    if (defaultValue !== undefined) {
-      return defaultValue;
-    }
-    throw new Error(`Environment variable ${key} is not set.`);
-  }
-  return value;
+const envSchema = z.object({
+  PORT: z.coerce.number().default(3000),
+  DATABASE_HOST: z.string({
+    error: "'DATABASE_HOST' es obligatoria",
+  }),
+  DATABASE_USER: z.string({
+    error: "'DATABASE_USER' es obligatoria",
+  }),
+  DATABASE_PASSWORD: z.string({
+    error: "'DATABASE_PASSWORD' es obligatoria",
+  }),
+  DATABASE_NAME: z.string({
+    error: "'DATABASE_NAME' es obligatoria",
+  }),
+});
+
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.log("Error de Configuracion del entorno\n");
+  parsedEnv.error.issues.forEach((issue) => {
+    console.log(`- ${issue.message}`);
+  });
+
+  process.exit(1);
 }
 
-export const config = {
-  app: {
-    port: getEnvVariable("PORT", 3000),
-  },
-};
+export const env = parsedEnv.data;
