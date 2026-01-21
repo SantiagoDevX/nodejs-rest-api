@@ -1,12 +1,9 @@
 import { Router } from "express";
-import { UserController } from "./user.controller.js";
-import { UserService } from "./user.service.js";
+import { userController } from "../../container.js";
 
 const router = Router();
-const userService = new UserService();
-const controller = new UserController(userService);
 
-router.get("/", controller.getAllUsers);
-router.get("/:id", controller.getUserById);
+router.get("/", userController.getAllUsers);
+router.get("/:id", userController.getUserById);
 
 export default router;

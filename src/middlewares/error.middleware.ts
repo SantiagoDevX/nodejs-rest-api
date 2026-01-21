@@ -6,12 +6,13 @@ export function errorMiddleware(
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void {
   if (err instanceof AppError) {
     errorResponse(res, err.statusCode, err.message);
     return;
   }
+
   console.error("Unexpected error:", err);
-  errorResponse(res);
+  errorResponse(res, 500, "Internal Server Error");
 }

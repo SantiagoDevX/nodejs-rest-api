@@ -9,6 +9,6 @@ const adapter = new PrismaMariaDb({
   password: env.DATABASE_PASSWORD,
 });
 
-const prisma = new PrismaClient({ adapter });
+const prismaClient = new PrismaClient({ adapter });
 
-export { prisma };
+export { prismaClient };

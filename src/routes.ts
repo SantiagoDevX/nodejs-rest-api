@@ -6,7 +6,14 @@ import { successResponse } from "./utils/response.js";
 const router = Router();
 
 router.get("/health", (_, res) => {
-  successResponse(res, 200, { message: "API is healthy" });
+  successResponse(res, 200, {
+    message: "API is healthy",
+    data: {
+      status: "OK",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+    },
+  });
 });
 
 router.use("/users", userRoutes);

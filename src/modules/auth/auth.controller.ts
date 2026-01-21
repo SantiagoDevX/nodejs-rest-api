@@ -23,6 +23,16 @@ export class AuthController {
 
   public login = async (req: Request, res: Response, next: NextFunction) => {
     try {
-    } catch (err) {}
+      const result = await this.AuthService.login(req.body);
+      successResponse(res, 200, {
+        message: "User logged in successfully",
+        data: result,
+      });
+    } catch (err) {
+      if (err instanceof AppError) {
+        return next(new AppError(err.message, err.statusCode));
+      }
+      next(new AppError("Internal Server Error", 500));
+    }
   };
 }

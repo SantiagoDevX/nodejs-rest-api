@@ -7,6 +7,9 @@ import { errorMiddleware } from "./middlewares/error.middleware.js";
 const app = express();
 app.set("port", env.PORT);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(routes);
 
 app.use((_req, _res, next) => {

@@ -1,15 +1,13 @@
-export class UserService {
-  public getAllUsers() {}
+import type { UserRepository } from "./user.repository.js";
 
-  public getUserById(id: number) {
-    return id;
+export class UserService {
+  constructor(private userRepository: UserRepository) {}
+
+  public async getAllUsers() {
+    return await this.userRepository.findAll();
   }
 
-  public createUser(userData: any) {
-    // Logic to create a new user
+  public async getUserById(id: number) {
+    return await this.userRepository.findById(id);
   }
 }
-/*
-las arrow function pueden heredar el contexto this del cual se crean
-las functions normales hacen referencia a this dependiendo de donde se ejecutan
- */

@@ -1,34 +1,34 @@
-import type { Request, Response } from "express";
-import { UserService } from "./user.service.js";
-import { errorResponse, successResponse } from "../../utils/response.js";
-import { AppError } from "../../utils/app-error.js";
+import type { Request, Response, NextFunction } from "express";
+import type { UserService } from "./user.service.js";
+import { successResponse } from "../../utils/response.js";
 
 export class UserController {
   constructor(private userService: UserService) {}
-  // pasamos a arrow functions porque no pierden el contexto de ejecucion heredado del cual se crearon
-  public getAllUsers = (req: Request, res: Response) => {
+
+  public getAllUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
-      const users = this.userService.getAllUsers();
+      const users = await this.userService.getAllUsers();
       successResponse(res, 200, { message: "Users retrieved", data: users });
     } catch (err) {
-      if (err instanceof AppError) {
-        return errorResponse(res, err.statusCode, err.message);
-      }
-
-      errorResponse(res, 500);
+      next(err);
     }
   };
 
-  public getUserById = (req: Request, res: Response) => {
+  public getUserById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const { id } = req.params;
-      const user = this.userService.getUserById(Number(id));
+      const user = await this.userService.getUserById(Number(id));
       successResponse(res, 200, { message: "User retrieved", data: user });
     } catch (err) {
-      if (err instanceof AppError) {
-        return errorResponse(res, err.statusCode, err.message);
-      }
-      errorResponse(res, 500);
+      next(err);
     }
   };
 }
